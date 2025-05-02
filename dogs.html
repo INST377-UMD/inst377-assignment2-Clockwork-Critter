@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-slider/1.0.0/simpleslider.min.js"></script>
+    <title>Home Assignment 2</title>
+</head>
+<body onload="populateDogs()" onload="populateBreeds()">
+    <h1>INST377 - Dogs</h1>
+    <nav>
+        <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/stocks.html">Stocks</a></li>
+            <li><a href="/dogs.html">Dogs</a></li>
+        </ul>
+    </nav>
+    <div style="width:612px; height:612px" data-simple-slider>
+        <img id="pic1">
+        <img id="pic2">
+        <img id="pic3">
+        <img id="pic4">
+        <img id="pic5">
+        <img id="pic6">
+        <img id="pic7">
+        <img id="pic8">
+        <img id="pic9">
+        <img id="pic10">
+      </div>
+      <script>
+    async function populateDogs()
+    {
+        let num =  1
+        while (num < 10) {
+            const url="https://dog.ceo/api/breeds/image/random"
+            const response = await fetch(url);
+            const data = await response.json();
+            const imageUrl = data.message;
+            const imgElement = document.getElementById("pic" + num);
+            if (imgElement) {
+            imgElement.src = imageUrl;
+        }
+            num = num +1 
+        }
+}
+    async function populateBreeds() {
+        const url="https://dogapi.dog/api/v2/breeds"
+        const response = await fetch(url);
+        const data = await response.json();
+        for item in data
+    }   
+simpleslider.getSlider();
+
+      </script>
+</body>
+</html>

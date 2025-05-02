@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    <title>Home Assignment 2</title>
+</head>
+<body onload="randquote()">
+    <h1>INST377 - Activities</h1>
+    <nav>
+        <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/stocks.html">Stocks</a></li>
+            <li><a href="/dogs.html">Dogs</a></li>
+        </ul>
+    </nav>
+    <div class="buttons">
+        <button onclick="location.href='/stocks.html'" class="button-7" role="button">Stocks</button>
+        <button onclick="location.href='/dogs.html'" class="button-7" role="button">Dogs</button>
+    </div>
+<div class="quote">
+    <h2>Random Quote:</h2>
+    <p id="quote">Loading</p>
+    <p id="author">Loading</p>
+
+</div>
+</body>
+<script>
+   async function randquote() {
+    const url="https://zenquotes.io/api/random"
+    const response = await fetch(url);
+    const data = await response.json();
+    document.getElementById("quote").innerHTML = data[0].q;
+    document.getElementById("author").innerHTML = data[0].a;
+} 
+
+</script>
+</html>
