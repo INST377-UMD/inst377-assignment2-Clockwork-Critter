@@ -31,6 +31,8 @@
       </div>
       <div id="breedButtons">
     </div>
+    <div id="breedInfoContainer" style="display: none;">
+    </div>
       <script>
     async function populateDogs()
     {
@@ -58,14 +60,44 @@ if (data && data.data) {
     data.data.forEach(breed => {
         const button = document.createElement("button");
         button.textContent = breed.attributes.name;
-        breedButtonContainer.appendChild(button);
-    });
-} else {
-    console.error("Failed to fetch or process breed data.");
-}
-}
-simpleslider.getSlider();
+        button.className = "button-7"
+        button.addEventListener('click', async () => {
+                        const breedDetails = await fetchBreedDetails(breed.id);
+                        if (breedDetails) {
+                            breedInfoContainer.innerHTML = `
+                                <h2>${breedDetails.name}</h2>
+                                <p>Description: ${breedDetails.description || 'No description available.'}</p>
+                                <p>Min Life: ${breedDetails.life.min || 'N/A'} years</p>
+                                <p>Max Life: ${breedDetails.life.max || 'N/A'} years</p>
+                            `;
+                            breedInfoContainer.style.display = 'block';
+                        } else {
+                            breedInfoContainer.innerHTML = '<p>Could not retrieve details for this breed.</p>';
+                            breedInfoContainer.style.display = 'block';
+                        }
+                    });
+                    breedButtonContainer.appendChild(button);
+                });
+            } else {
+                console.error("Failed to fetch or process breed data.");
+            }
+        }
 
-      </script>
+        async function fetchBreedDetails(breedId) {
+            const url = `https://dogapi.dog/api/v2/breeds/${breedId}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data && data.data && data.data.attributes) {
+                return {
+                    name: data.data.attributes.name,
+                    description: data.data.attributes.description,
+                    life: data.data.attributes.life
+                };
+            }
+            return null;
+        }
+
+        simpleslider.getSlider();
+    </script>
 </body>
 </html>
