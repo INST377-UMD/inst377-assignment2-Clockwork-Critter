@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-slider/1.0.0/simpleslider.min.js"></script>
     <title>Home Assignment 2</title>
 </head>
-<body onload="populateDogs()" onload="populateBreeds()">
+<body onload="populateDogs()">
     <h1>INST377 - Dogs</h1>
     <nav>
         <ul>
@@ -29,6 +29,8 @@
         <img id="pic9">
         <img id="pic10">
       </div>
+      <div id="breedButtons">
+    </div>
       <script>
     async function populateDogs()
     {
@@ -44,13 +46,24 @@
         }
             num = num +1 
         }
+        populateBreeds()
 }
     async function populateBreeds() {
         const url="https://dogapi.dog/api/v2/breeds"
         const response = await fetch(url);
         const data = await response.json();
-        for item in data
-    }   
+        const breedButtonContainer = document.getElementById("breedButtons");
+
+if (data && data.data) {
+    data.data.forEach(breed => {
+        const button = document.createElement("button");
+        button.textContent = breed.attributes.name;
+        breedButtonContainer.appendChild(button);
+    });
+} else {
+    console.error("Failed to fetch or process breed data.");
+}
+}
 simpleslider.getSlider();
 
       </script>
