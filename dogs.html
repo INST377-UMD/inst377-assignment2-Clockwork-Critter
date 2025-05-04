@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-slider/1.0.0/simpleslider.min.js"></script>
+    <title>Home Assignment 2</title>
+</head>
+<body onload="populateDogs()">
+    <h1>INST377 - Dogs</h1>
+    <nav>
+        <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/stocks.html">Stocks</a></li>
+            <li><a href="/dogs.html">Dogs</a></li>
+        </ul>
+    </nav>
+    <div style="width:612px; height:612px" data-simple-slider>
+        <img id="pic1">
+        <img id="pic2">
+        <img id="pic3">
+        <img id="pic4">
+        <img id="pic5">
+        <img id="pic6">
+        <img id="pic7">
+        <img id="pic8">
+        <img id="pic9">
+        <img id="pic10">
+      </div>
+      <div id="breedButtons">
+    </div>
+    <div id="breedInfoContainer" style="display: none;">
+    </div>
+      <script>
+    async function populateDogs()
+    {
+        let num =  1
+        while (num < 10) {
+            const url="https://dog.ceo/api/breeds/image/random"
+            const response = await fetch(url);
+            const data = await response.json();
+            const imageUrl = data.message;
+            const imgElement = document.getElementById("pic" + num);
+            if (imgElement) {
+            imgElement.src = imageUrl;
+        }
+            num = num +1 
+        }
+        populateBreeds()
+}
+    async function populateBreeds() {
+        const url="https://dogapi.dog/api/v2/breeds"
+        const response = await fetch(url);
+        const data = await response.json();
+        const breedButtonContainer = document.getElementById("breedButtons");
+
+if (data && data.data) {
+    data.data.forEach(breed => {
+        const button = document.createElement("button");
+        button.textContent = breed.attributes.name;
+        button.className = "button-7"
+        button.addEventListener('click', async () => {
+                        const breedDetails = await fetchBreedDetails(breed.id);
+                        if (breedDetails) {
+                            breedInfoContainer.innerHTML = `
+                                <h2>${breedDetails.name}</h2>
+                                <p>Description: ${breedDetails.description || 'No description available.'}</p>
+                                <p>Min Life: ${breedDetails.life.min || 'N/A'} years</p>
+                                <p>Max Life: ${breedDetails.life.max || 'N/A'} years</p>
+                            `;
+                            breedInfoContainer.style.display = 'block';
+                        } else {
+                            breedInfoContainer.innerHTML = '<p>Could not retrieve details for this breed.</p>';
+                            breedInfoContainer.style.display = 'block';
+                        }
+                    });
+                    breedButtonContainer.appendChild(button);
+                });
+            } else {
+                console.error("Failed to fetch or process breed data.");
+            }
+        }
+
+        async function fetchBreedDetails(breedId) {
+            const url = `https://dogapi.dog/api/v2/breeds/${breedId}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data && data.data && data.data.attributes) {
+                return {
+                    name: data.data.attributes.name,
+                    description: data.data.attributes.description,
+                    life: data.data.attributes.life
+                };
+            }
+            return null;
+        }
+
+        simpleslider.getSlider();
+    </script>
+</body>
+</html>
